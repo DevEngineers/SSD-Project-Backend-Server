@@ -1,0 +1,18 @@
+{
+  "name": "learn-git-backend",
+  "version": "1.0.0",
+  "main": "App.js",
+  "license": "UNLICENSED",
+  "scripts": {
+    "server": "node ./bin/www",
+    "start": "yarn server"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "http-errors": "^2.0.0",
+    "jade": "^1.11.0",
+    "morgan": "^1.10.0",
+    "path": "^0.12.7"
+  }
+}
