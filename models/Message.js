@@ -21,7 +21,6 @@ const Message = new Schema(
         fileLocation: {
             type: String,
             default: "",
-            required: true,
         },
     },
     {
