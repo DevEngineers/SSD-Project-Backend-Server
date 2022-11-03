@@ -3,7 +3,25 @@ const express = require("express");
 const path = require("path");
 const logger = require("morgan");
 const cors = require("cors");
+const mongoose = require("mongoose");
 const indexRouter = require("./routes/index");
+const messageRouter = require("./routes/messageRouter");
+const dotenv = require("dotenv");
+dotenv.config();
+
+/**
+ * Connecting to MongoDB Server
+ */
+const connect = mongoose.connect(process.env.MONGODB_ATLAS_URL);
+
+connect.then(
+    (db) => {
+      console.log("MongoDB Atlas connected with the server");
+    },
+    (err) => {
+      console.log(err);
+    }
+ );
 
 const app = express();
 
@@ -20,6 +38,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
+app.use("/message", messageRouter)
 /**
  * catch 404 and forward to error handler
  */
@@ -40,7 +59,6 @@ app.use(function (err, req, res, next) {
   res.render("error");
   console.error(err);
 });
-
 
 
 module.exports = app;
