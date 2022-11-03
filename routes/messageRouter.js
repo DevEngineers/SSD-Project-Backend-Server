@@ -10,8 +10,10 @@ messageRouter.post('/',messageController.createMessage);
 
 messageRouter.get('/',messageController.getMessage);
 
-messageRouter.put('/',messageController.UpdateMessage);
+messageRouter.get('/:id',messageController.getMessageByID);
 
-messageRouter.delete('/',messageController.deleteMessage);
+messageRouter.put('/:id',messageController.UpdateMessage);
+
+messageRouter.delete('/:id',messageController.deleteMessage);
 
 module.exports = messageRouter;
