@@ -1,67 +1,74 @@
-const fs = require('fs');
+const Message = require("../models/Message");
 
-exports.createMessage = (req,res,next) =>{
+exports.createMessage = async (req,res,next) => {    
     console.log(req.body);
-
-    //parse json
-    let jsonObj = JSON.parse(req.body);
-    console.log("parse : "+jsonObj);
-
-    // stringify JSON Object
-    let jsonMessage = JSON.stringify(jsonObj);
-    console.log("stringify : "+jsonMessage);
-
-    fs.writeFile('message.json', jsonMessage, 'utf-8' , function(err){
-        if(err) {
+    await Message.insertMany(req.body)
+        .then((message) =>{
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json");
+            res.json(message);
+        },(err) =>{
             next(err);
-            console.log("An error file not save");
-        }
-        res.statusCode = 200;
-        console.log('File is created successfully');
-    });
+        })
+        .catch((err) =>{
+            next(err);
+        })
 };
 
-exports.getMessage = (req,res,next) => {
-    // let file = req.params.id;
-    fs.readFile('message.json', (err, data) => {
-        if(err) throw next(err);
-        let jsonData = JSON.parse(data);
-        console.log(jsonData);
-        res.statusCode = 200;
-        // res.setHeader("Content-Type", "application/json");
-    });
+exports.getMessage = async (req,res,next) =>{
+    await Message.find({})
+        .then((message) =>{
+            res.statusCode = 200;
+            res.setHeader("Content-Type","application/json")
+            res.json(message);
+        },(err) =>{
+            next(err);
+        })
+        .catch((err) =>{
+            next(err);
+        })
+};
+
+exports.getMessageByID = async (req,res,next) => {
+    await Message.findById(req.params.id)
+        .then((message) => {
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json");
+            res.json(message);
+        },(err) => {
+            next(err);
+        })
+        .catch((err) => {
+            next(err);
+        })
 };
 
 exports.UpdateMessage = async (req, res, next) => {
-    console.log(req.body);
-
-    //parse json
-    let jsonObj = JSON.parse(req.body);
-    console.log("parse : "+jsonObj);
-
-    // stringify JSON Object
-    let jsonMessage = JSON.stringify(jsonObj);
-    console.log("stringify : "+jsonMessage);
-
-    fs.appendFile('message.json', jsonMessage, 'utf-8' , function(err){
-        if(err) {
+    await Message.findOneAndUpdate(req.params.id,{
+        $set:req.body
+    },{ new :true })
+        .then((message) => {
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json");
+            res.json(message);
+        },(err) => {
             next(err);
-            console.log("An error update message");
-        }
-        res.statusCode = 200;
-        console.log('File is updated successfully');
-    });
+        })
+        .catch((err) => {
+            next(err);
+        })
 };
 
 exports.deleteMessage = async (req, res, next) => {
-    console.log(req.body);
-    
-    fs.unlink('message.json', function(err){
-        if(err) {
+    await Message.findByIdAndRemove(req.params.id,)
+        .then(() => {
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json");
+            res.json({data:"Success"});
+        },(err) => {
             next(err);
-            console.log("An error file not delete");
-        }
-        res.statusCode = 200;
-        console.log('File is deleted successfully');
-    });
+        })
+        .catch((err) => {
+            next(err);
+        })
 };
