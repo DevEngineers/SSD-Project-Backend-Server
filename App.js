@@ -3,9 +3,9 @@ const express = require("express");
 const path = require("path");
 const logger = require("morgan");
 const cors = require("cors");
+const session = require("express-session");
 const mongoose = require("mongoose");
 const indexRouter = require("./routes/index");
-const messageRouter = require("./routes/messageRouter");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -25,7 +25,32 @@ connect.then(
 
 const app = express();
 
+/**
+ * Create a session-store to be used by both the express-session
+ *  middleware and the keycloak middleware.
+ */
+const memoryStore = new session.MemoryStore();
+
+app.use(session({
+  secret: 'any_key',
+  resave: false,
+  saveUninitialized: true,
+  store: memoryStore
+}));
+
+/**
+ * Initializing Keycloak Middleware
+ */
+const keycloak = require('./keycloak-config').initKeycloak();
+app.use(keycloak.middleware());
+
+/**
+ * Importing Message Router
+ */
+const messageRouter = require('./routes/messageRouter');
+
 app.use(cors());
+
 /**
  * view engine setup
  */
@@ -38,7 +63,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
-app.use("/message", messageRouter)
+app.use("/message", messageRouter);
+
 /**
  * catch 404 and forward to error handler
  */

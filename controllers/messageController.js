@@ -1,6 +1,21 @@
 const Message = require("../models/Message");
 
-exports.createMessage = async (req,res,next) => {    
+exports.createMessageWorker = async (req,res,next) => {    
+    console.log(req.body);
+    await Message.insertMany(req.body)
+        .then((message) =>{
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json");
+            res.json(message);
+        },(err) =>{
+            next(err);
+        })
+        .catch((err) =>{
+            next(err);
+        })
+};
+
+exports.createMessageManager = async (req,res,next) => {    
     console.log(req.body);
     await Message.insertMany(req.body)
         .then((message) =>{
@@ -29,7 +44,7 @@ exports.getMessage = async (req,res,next) =>{
         })
 };
 
-exports.getMessageByID = async (req,res,next) => {
+exports.getMessageByName = async (req,res,next) => {
     await Message.findById(req.params.id)
         .then((message) => {
             res.statusCode = 200;
