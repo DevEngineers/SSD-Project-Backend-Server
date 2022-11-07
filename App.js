@@ -4,6 +4,7 @@ const path = require("path");
 const logger = require("morgan");
 const cors = require("cors");
 const session = require("express-session");
+const fileUpload = require('express-fileupload');
 const mongoose = require("mongoose");
 const indexRouter = require("./routes/index");
 const dotenv = require("dotenv");
@@ -36,6 +37,14 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   store: memoryStore
+}));
+
+
+/**
+ *  enable files upload
+ */
+app.use(fileUpload({
+  createParentPath: true
 }));
 
 /**
@@ -85,6 +94,5 @@ app.use(function (err, req, res, next) {
   res.render("error");
   console.error(err);
 });
-
 
 module.exports = app;
