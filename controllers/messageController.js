@@ -113,10 +113,3 @@ exports.deleteMessage = async (req, res, next) => {
             next(err);
         })
 };
-
-const fileUpload = (fileData) => {
-    console.log("On fileUpload", fileData);
-    
-
-    upload.single("file");
-}
