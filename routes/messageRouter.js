@@ -11,6 +11,8 @@ messageRouter.post('/worker', keycloak.protect('worker'),messageController.creat
 
 messageRouter.post('/manager', keycloak.protect('manager'),messageController.createMessageManager);
 
+messageRouter.post('/manager/file', keycloak.protect('manager'),messageController.managerUploadFile);
+
 messageRouter.get('/',keycloak.protect(['worker','manager']),messageController.getMessage);
 
 messageRouter.get('/:id',keycloak.protect(['worker','manager']),messageController.getMessageByName);
