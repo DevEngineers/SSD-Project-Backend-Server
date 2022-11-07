@@ -1,20 +1,6 @@
 const Message = require("../models/Message");
-const multer = require('multer');
 
-const fileStorageEngine = multer.diskStorage({
-    destination: (req,file,cd) =>{
-        console.log("storage 01 ");
-        cd(null,'./Files')
-    },
-    filename: (req,file,cd) =>{
-        console.log("storage 02");
-        cd(null, Date.now()+'--'+file.name)
-    }
-});
-const upload = multer ({storage:fileStorageEngine});
-
-exports.createMessageWorker = async (req,res,next) => {    
-    console.log(req.body);
+exports.createMessageWorker = async (req,res,next) => {
     await Message.create(req.body)
         .then((message) =>{
             res.statusCode = 200;
@@ -53,11 +39,16 @@ exports.managerUploadFile = (req,res,next) => {
             // declaring file property
             const file = req.files.file;
 
-            file.mv('./Files/' + Date.now()+'--'+file.name);
+            /**
+             *  folder location + file Name(data + filaName)
+             */
+            const location = `C://Users//{userName}//Desktop//Files//` + Date.now()+'--'+file.name;
 
+            file.mv(location);
+            
             res.send({
                 statusCode:200,
-                message:'file uploaded'
+                body:location
             })
         }
     } catch(err) {
