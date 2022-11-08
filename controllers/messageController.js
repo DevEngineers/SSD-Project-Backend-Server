@@ -1,8 +1,7 @@
 const Message = require("../models/Message");
 
-exports.createMessageWorker = async (req,res,next) => {    
-    console.log(req.body);
-    await Message.insertMany(req.body)
+exports.createMessageWorker = async (req,res,next) => {
+    await Message.create(req.body)
         .then((message) =>{
             res.statusCode = 200;
             res.setHeader("Content-Type", "application/json");
@@ -15,19 +14,46 @@ exports.createMessageWorker = async (req,res,next) => {
         })
 };
 
-exports.createMessageManager = async (req,res,next) => {    
-    console.log(req.body);
-    await Message.insertMany(req.body)
-        .then((message) =>{
-            res.statusCode = 200;
-            res.setHeader("Content-Type", "application/json");
-            res.json(message);
-        },(err) =>{
-            next(err);
-        })
-        .catch((err) =>{
-            next(err);
-        })
+exports.createMessageManager = async(req,res,next) => {
+    await Message.create(req.body)
+    .then((message) =>{
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/json");
+        res.json(message);
+    },(err) =>{
+        next(err);
+    })
+    .catch((err) =>{
+        next(err);
+    })
+};
+
+exports.managerUploadFile = (req,res,next) => {
+    try{
+        if(!req.files){
+            res.send({
+                statusCode: 403,
+                message: 'No file for upload'
+            });
+        }else if (req.files){
+            // declaring file property
+            const file = req.files.file;
+
+            /**
+             *  folder location + file Name(data + filaName)
+             */
+            const location = `C://Users//{userName}//Desktop//Files//` + Date.now()+'--'+file.name;
+
+            file.mv(location);
+            
+            res.send({
+                statusCode:200,
+                body:location
+            })
+        }
+    } catch(err) {
+        res.status(500).send(err);
+    }
 };
 
 exports.getMessage = async (req,res,next) =>{

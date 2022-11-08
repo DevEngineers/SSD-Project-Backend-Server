@@ -3,12 +3,12 @@ const Schema = mongoose.Schema;
 
 const Message = new Schema(
     {
-        sender: {
+        user: {
             type: String,
             default: "",
             required: true,
         },
-        receiver: {
+        date: {
             type: String,
             default: "",
             required: true,
