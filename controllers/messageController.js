@@ -85,7 +85,8 @@ exports.getMessage = async (req,res,next) =>{
 };
 
 exports.getMessageByName = async (req,res,next) => {
-    await Message.findById(req.params.id)
+    const name = req.params.id;
+    await Message.find({user:req.params.id})
         .then((message) => {
             res.statusCode = 200;
             res.setHeader("Content-Type", "application/json");
