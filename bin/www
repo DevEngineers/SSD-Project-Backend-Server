@@ -14,10 +14,6 @@ const https = require('https');
 const options = {
   key : fs.readFileSync('./server.key'),
   cert: fs.readFileSync('./server.crt'),
-  // ca: [
-  //     fs.readFileSync('Users/sm2ir/OneDrive/Desktop/Files/client.key'),
-  //     fs.readFileSync('Users/sm2ir/OneDrive/Desktop/Files//client.crt'),
-  // ],
   requestCert: true,
   passphrase: '12345'
 }
