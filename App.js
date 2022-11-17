@@ -6,7 +6,6 @@ const cors = require("cors");
 const session = require("express-session");
 const fileUpload = require('express-fileupload');
 const mongoose = require("mongoose");
-const indexRouter = require("./routes/index");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -57,6 +56,7 @@ app.use(keycloak.middleware());
  * Importing Message Router
  */
 const messageRouter = require('./routes/messageRouter');
+const indexRouter = require("./routes/index");
 
 app.use(cors());
 
