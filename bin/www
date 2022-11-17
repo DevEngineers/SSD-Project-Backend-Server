@@ -6,6 +6,21 @@
 const app = require('../App');
 const debug = require('debug')('learngitbackend:server');
 const http = require('http');
+const fs = require('fs');
+const https = require('https');
+
+
+
+const options = {
+  key : fs.readFileSync('./server.key'),
+  cert: fs.readFileSync('./server.crt'),
+  // ca: [
+  //     fs.readFileSync('Users/sm2ir/OneDrive/Desktop/Files/client.key'),
+  //     fs.readFileSync('Users/sm2ir/OneDrive/Desktop/Files//client.crt'),
+  // ],
+  requestCert: true,
+  passphrase: '12345'
+}
 
 /**
  * Get port from environment and store in Express.
@@ -16,15 +31,20 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
-const server = http.createServer(app);
+ const httpServer = http.createServer(app);
 
+ const httpsServer = http.createServer(options,app);
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+ httpServer.listen(5000);
+ httpServer.on('error', onError);
+ httpServer.on('listening', onListening);
+
+httpsServer.listen(8443);
+httpsServer.on('error', onError);
+httpsServer.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -79,7 +99,7 @@ function onError(error) {
  */
 
 function onListening() {
-  const address = server.address();
+  const address = httpsServer.address();
   const bind = typeof address === 'string'
       ? 'pipe ' + address
       : 'port ' + address.port;
