@@ -13,17 +13,7 @@ exports.tlsHandshake = async (req,res,next) => {
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
         res.json(key);
+    }else{
+        res.statusCode = 404;
     }
-
-    await Message.create(req.body)
-        .then((message) =>{
-            res.statusCode = 200;
-            res.setHeader("Content-Type", "application/json");
-            res.json(message);
-        },(err) =>{
-            next(err);
-        })
-        .catch((err) =>{
-            next(err);
-        })
 };
