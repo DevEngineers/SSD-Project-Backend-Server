@@ -9,11 +9,7 @@ const key = {
     certificate: process.env.PRIVATE_KEY,
   }
 exports.tlsHandshake = async (req,res,next) => {
-    if(req.body.message == 'hello'){
-        res.statusCode = 200;
-        res.setHeader("Content-Type", "application/json");
-        res.json(key);
-    }else{
-        res.statusCode = 404;
-    }
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "application/json");       
+    res.json(key);
 };
